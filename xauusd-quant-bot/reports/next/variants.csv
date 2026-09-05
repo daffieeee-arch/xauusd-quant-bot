@@ -1,0 +1,15 @@
+strategy,timeframe,source,trades,win_rate_pct,profit_factor,net_pnl,equity_end,max_dd_pct,days,avg_day_pnl,median_day_pnl,best_day,worst_day,green_days,days_hit_1000,days_halted,pct_days_hit_1000,variant
+mean_reversion,m5_baseline_tight,GC=F,226,49.12,1.45,11245.58,21245.58,-13.47,61,184.35,-207.18,2068.61,-396.8,18,15,51,24.59,baseline_tight
+mean_reversion,m5_skip_london_open,GC=F,150,60.67,2.59,26851.1,36851.1,-7.88,61,440.18,0.0,2045.86,-451.51,26,23,53,37.7,skip_london_open
+mean_reversion,m5_overlap_only,GC=F,239,45.61,1.218,5513.84,15513.84,-21.42,61,90.39,-206.72,1636.66,-345.53,15,10,43,16.39,overlap_only
+mean_reversion,m5_ny_only,GC=F,275,46.91,1.227,7417.93,17417.93,-26.59,61,121.61,-237.57,1818.66,-388.22,15,12,50,19.67,ny_only
+mean_reversion,m5_range_filter,GC=F,183,54.1,1.649,13395.37,23395.37,-12.82,61,219.6,-203.45,2048.07,-387.56,18,16,49,26.23,range_filter
+mean_reversion,m5_range_skip_open,GC=F,141,61.7,2.191,22313.35,32313.35,-8.19,61,365.79,0.0,2072.81,-545.94,23,22,51,36.07,range_skip_open
+mean_reversion,m5_range_overlap,GC=F,133,39.1,0.932,-778.47,9221.53,-26.98,61,-12.76,-37.43,1463.85,-302.16,15,1,22,1.64,range_overlap
+mean_reversion,m5_range_skip_open_fat,GC=F,166,57.83,1.662,14798.03,24798.03,-10.53,61,242.59,-213.69,2043.97,-387.61,19,17,49,27.87,range_skip_open_fat
+mean_reversion,m5_baseline_tight_IS,GC=F,187,50.27,1.428,8362.07,18362.07,-13.47,39,214.41,-200.67,1611.28,-393.24,13,11,31,28.21,baseline_tight_IS
+mean_reversion,m5_baseline_tight_OOS,GC=F,97,53.61,1.953,8282.64,18282.64,-12.6,22,376.48,-201.28,1676.83,-365.32,9,8,19,36.36,baseline_tight_OOS
+mean_reversion,m5_skip_london_open_IS,GC=F,119,60.5,2.44,17145.91,27145.91,-7.88,39,439.64,0.0,2045.86,-309.78,17,15,33,38.46,skip_london_open_IS
+mean_reversion,m5_skip_london_open_OOS,GC=F,117,51.28,1.268,3672.3,13672.3,-12.91,22,166.92,-228.88,1514.0,-302.26,7,6,19,27.27,skip_london_open_OOS
+mean_reversion,m5_range_skip_open_IS,GC=F,112,64.29,2.825,19505.72,29505.72,-8.19,39,500.15,0.0,2072.81,-393.5,18,17,32,43.59,range_skip_open_IS
+mean_reversion,m5_range_skip_open_OOS,GC=F,111,40.54,0.971,-295.99,9704.01,-19.27,22,-13.45,-224.93,1402.97,-282.43,3,3,19,13.64,range_skip_open_OOS

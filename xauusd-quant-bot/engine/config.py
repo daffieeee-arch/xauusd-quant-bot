@@ -43,11 +43,15 @@ class StrategyParams:
     ema_period: int = 50
     ema_fast: int = 9
     ema_slow: int = 21
-    session: str = "london_ny"  # all | london | ny | london_ny
+    session: str = "london_ny"  # all | london | ny | london_ny | overlap | london_ny_skip_open
     # After the day is green, press size toward the daily target (capped).
     press_winners: bool = True
     press_max_mult: float = 4.0
     lock_at_daily_target: bool = True
+    # Only fade when the tape is ranging (skip trend-explosion days).
+    range_only: bool = False
+    max_atr_ratio: float = 1.55
+    max_adx: float = 28.0
 
 
 STRATEGIES = ("breakout", "mean_reversion", "hybrid", "confluence")

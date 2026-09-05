@@ -48,6 +48,21 @@ Equity-curve: `reports/equity_m5_mean_reversion_tight.png`
 
 Orders op **jouw** IC Markets-demo. Yahoo ≠ IC-spread/DOM. Eerste live-demo run is de echte forward-test.
 
+## Micro-scalp (veel trades, 0.15% risk) — Yahoo-proxy
+
+Zelfde halt (−2% / +€1k), maar kleinere size zodat honderden trades/dag mogelijk zijn:
+
+| Setup | Trades | WR | PF | Net | +€1k dagen |
+|-------|--------|----|----|-----|------------|
+| M5 mean-reversion micro | 2149 (61d) | 52% | 1.46 | +€24.599 | 19 |
+| M1 mean-reversion micro | 799 (7d) | 46% | 1.03 | +€263 | 1 |
+
+M5 micro slaat breakout/confluence. Echte IC-ticks kunnen dit verbeteren of breken (spread op echte tikkers).
+
+## Research-update: geen nieuwe strategie, wel uur-filter-hypothese
+
+Zie [`reports/next/NEXT.md`](next/NEXT.md). Range/ADX-filter **overfit** (OOS PF 0.97). Skip London 07:00 blijft **kandidaat** (OOS nog plus, maar zwakker dan baseline). Baseline M5 MR tight blijft de kampioen tot IC-ticks.
+
 ## Volgende stap (van mij, als jij API geeft)
 
 Paper/demo XAUUSD M5 mean-reversion tight, DOM-filter aan, zelfde 1%/2%/€1k-lock, dagelijkse rapportage.

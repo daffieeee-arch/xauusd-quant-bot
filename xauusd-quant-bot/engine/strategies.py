@@ -19,6 +19,8 @@ def enrich(df: pd.DataFrame, p: StrategyParams) -> pd.DataFrame:
     out["prior_high"] = ind.rolling_prior_high(out, p.breakout_lookback)
     out["prior_low"] = ind.rolling_prior_low(out, p.breakout_lookback)
     out["in_sess"] = ind.in_session(out.index, p.session)
+    out["adx"] = ind.adx(out, p.atr_period)
+    out["atr_ratio"] = ind.atr_ratio(out["atr"], 48)
     return out
 
 
@@ -45,8 +47,20 @@ def signal_breakout(row: pd.Series, prev: pd.Series, p: StrategyParams) -> int:
     return 0
 
 
+def _is_range_regime(row: pd.Series, p: StrategyParams) -> bool:
+    if not p.range_only:
+        return True
+    ratio = float(row.get("atr_ratio", np.nan))
+    adx_v = float(row.get("adx", np.nan))
+    if np.isfinite(ratio) and ratio > p.max_atr_ratio:
+        return False
+    if np.isfinite(adx_v) and adx_v > p.max_adx:
+        return False
+    return True
+
+
 def signal_mean_reversion(row: pd.Series, prev: pd.Series, p: StrategyParams) -> int:
-    if not _bar_ok(row, p):
+    if not _bar_ok(row, p) or not _is_range_regime(row, p):
         return 0
     vwap = float(row["vwap"])
     ema = float(row["ema"])
