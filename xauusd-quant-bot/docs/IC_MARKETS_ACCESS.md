@@ -2,6 +2,12 @@
 
 Zonder dit kan ik alleen Yahoo/COMEX-proxy gebruiken. Voor echte scalps (seconden, tikkers, honderden trades) moet de dataset **jouw IC Markets bid/ask** zijn.
 
+## Status (5 sep 2026)
+
+Client ID + secret staan lokaal in `.env` (niet in git).  
+App-auth op `demo.ctraderapi.com` gaf: **`CH_CLIENT_AUTH_FAILURE` / `OA client is not in active state`**.  
+Dat betekent: de Open API-app is nog **Submitted**, niet **Active**. Tick-download start pas ná Spotware-goedkeuring + één Allow-klik.
+
 ## Eenmalig — Open API (dit kan alleen jij)
 
 Spotware laat mij geen app op jouw cTID aanmaken.
