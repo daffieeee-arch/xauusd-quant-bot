@@ -31,7 +31,7 @@ namespace cAlgo.Robots
     public class XauUsdQuantBot : Robot
     {
         // ---- Strategy ----
-        [Parameter("Strategy Mode", DefaultValue = StrategyMode.Hybrid)]
+        [Parameter("Strategy Mode", DefaultValue = StrategyMode.MeanReversion)]
         public StrategyMode StrategyMode { get; set; }
 
         [Parameter("Session Filter", DefaultValue = SessionFilterMode.LondonNY)]
@@ -44,10 +44,19 @@ namespace cAlgo.Robots
         [Parameter("Max daily loss %", DefaultValue = 2.0, MinValue = 0.5, MaxValue = 10.0)]
         public double MaxDailyLossPercent { get; set; }
 
-        [Parameter("Max daily profit % (optional halt)", DefaultValue = 0.0, MinValue = 0.0)]
+        [Parameter("Max daily profit % (0=off)", DefaultValue = 0.0, MinValue = 0.0)]
         public double MaxDailyProfitPercent { get; set; }
 
-        [Parameter("Max trades per day", DefaultValue = 12, MinValue = 1, MaxValue = 100)]
+        [Parameter("Daily profit target (account ccy)", DefaultValue = 1000.0, MinValue = 0.0)]
+        public double DailyProfitTarget { get; set; }
+
+        [Parameter("Press winners (scale when green)", DefaultValue = true)]
+        public bool PressWinners { get; set; }
+
+        [Parameter("Press max multiplier", DefaultValue = 4.0, MinValue = 1.0, MaxValue = 8.0)]
+        public double PressMaxMult { get; set; }
+
+        [Parameter("Max trades per day", DefaultValue = 40, MinValue = 1, MaxValue = 100)]
         public int MaxTradesPerDay { get; set; }
 
         [Parameter("Cooldown bars after loss", DefaultValue = 3, MinValue = 0, MaxValue = 50)]
@@ -69,10 +78,10 @@ namespace cAlgo.Robots
         [Parameter("DOM min imbalance", DefaultValue = 0.25, MinValue = 0.05, MaxValue = 0.9)]
         public double DomMinImbalance { get; set; }
 
-        [Parameter("SL ATR multiplier", DefaultValue = 1.2, MinValue = 0.3)]
+        [Parameter("SL ATR multiplier", DefaultValue = 0.8, MinValue = 0.3)]
         public double SlAtrMult { get; set; }
 
-        [Parameter("TP ATR multiplier", DefaultValue = 1.8, MinValue = 0.3)]
+        [Parameter("TP ATR multiplier", DefaultValue = 1.2, MinValue = 0.3)]
         public double TpAtrMult { get; set; }
 
         [Parameter("ATR periods", DefaultValue = 14, MinValue = 5)]
@@ -86,7 +95,7 @@ namespace cAlgo.Robots
         public double BreakoutBufferAtr { get; set; }
 
         // ---- Mean reversion ----
-        [Parameter("VWAP deviation ATR", DefaultValue = 1.4, MinValue = 0.5)]
+        [Parameter("VWAP deviation ATR", DefaultValue = 1.1, MinValue = 0.5)]
         public double VwapDeviationAtr { get; set; }
 
         [Parameter("EMA period (MR filter)", DefaultValue = 50, MinValue = 10)]
@@ -405,6 +414,10 @@ namespace cAlgo.Robots
                 return false;
             }
 
+            var dayPnl = Account.Equity - _dayStartEquity;
+            if (DailyProfitTarget > 0 && dayPnl >= DailyProfitTarget)
+                return false;
+
             if (MaxDailyProfitPercent > 0 && dayPnlPct >= MaxDailyProfitPercent)
                 return false;
 
@@ -461,6 +474,14 @@ namespace cAlgo.Robots
         private double ComputeVolumeForRisk(double stopPips)
         {
             var riskMoney = Account.Equity * (RiskPercent / 100.0);
+            var dayPnl = Account.Equity - _dayStartEquity;
+            if (PressWinners && dayPnl > 0 && DailyProfitTarget > 0)
+            {
+                var mult = 1.0 + (dayPnl / Math.Max(DailyProfitTarget / 4.0, 1.0));
+                if (mult > PressMaxMult)
+                    mult = PressMaxMult;
+                riskMoney *= mult;
+            }
             if (riskMoney <= 0 || stopPips <= 0)
                 return 0;
 

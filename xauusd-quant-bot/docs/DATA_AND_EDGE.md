@@ -40,3 +40,5 @@ To make **+€1000/day** you need **+10R net** in one day while a −2R day alre
 3. €1000/day becomes plausible only at much larger equity (e.g. ~€50k–€100k+) if expectancy holds — not as day-1 target on €10k.
 
 The bot therefore optimizes for **process metrics**: win rate, profit factor, max DD, avg R, trades/day — not a forced €1000/day parameter.
+
+**Path that can still produce €1000 days on €10k:** first trade at 1% risk; if the day is green, press size (capped) toward a €1000 lock; hard-stop at −2%. Math: 1.00 lot × $10 gold move ≈ €1000. Backtests (see `reports/FINDINGS.md`) show this lock firing on a minority of days, with most other days hitting the halt — net still positive on the winning setup.

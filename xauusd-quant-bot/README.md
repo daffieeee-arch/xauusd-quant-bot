@@ -1,40 +1,42 @@
 # XAUUSD Quant Bot (cTrader / IC Markets)
 
-Demo-first multi-strategy scalper for **XAUUSD** as a **cTrader cBot** (C#).
+Autonome research-pipeline + cTrader cBot voor **XAUUSD**. Jij hoeft geen sheets of UI te bedienen: `python3 -m engine.run` haalt data, test strategieën en schrijft rapporten.
 
-## What you get
+## Status
 
-| Piece | Path |
-|-------|------|
-| Main cBot (3 strategies + rotate) | [`src/cBots/XauUsdQuantBot.cs`](src/cBots/XauUsdQuantBot.cs) |
-| DOM imbalance indicator (live L2) | [`src/indicators/DomImbalance.cs`](src/indicators/DomImbalance.cs) |
-| Data / Level II research | [`docs/DATA_AND_EDGE.md`](docs/DATA_AND_EDGE.md) |
-| Install & test steps | [`docs/INSTALL_CTRADER.md`](docs/INSTALL_CTRADER.md) |
-| Backtest scorecard | [`backtest/SCORECARD.md`](backtest/SCORECARD.md) |
+- Engine + walk-forward gedraaid. Winnaar: **M5 mean-reversion tight** (OOS PF 1.95).
+- Lees [`reports/FINDINGS.md`](reports/FINDINGS.md) — dat is het inhoudelijke rapport.
+- Demo-orders op **jouw** IC-account volgen pas na API-credentials.
 
-## Strategies
+## Onderdelen
 
-1. **Breakout** — prior-range break with ATR buffer  
-2. **MeanReversion** — fade session VWAP stretch (EMA soft filter)  
-3. **Hybrid** — EMA cross / pullback near VWAP + volatility gate  
-4. **RotateAll** — first valid signal among the three (use only after singles look OK)
+| Stuk | Pad |
+|------|-----|
+| Autonome engine | [`engine/`](engine/) |
+| cBot (C#) | [`src/cBots/XauUsdQuantBot.cs`](src/cBots/XauUsdQuantBot.cs) |
+| DOM-indicator | [`src/indicators/DomImbalance.cs`](src/indicators/DomImbalance.cs) |
+| Bevindingen | [`reports/FINDINGS.md`](reports/FINDINGS.md) |
+| Ruwe tabellen | [`reports/REPORT.md`](reports/REPORT.md), [`reports/WALKFORWARD.md`](reports/WALKFORWARD.md) |
+| Broker-data | [`docs/DATA_AND_EDGE.md`](docs/DATA_AND_EDGE.md) |
 
-Shared: London/NY session filter, spread cap, ATR stop/target, **1% risk**, **2% daily loss halt**, optional **Level II DOM imbalance** filter.
+## Zelf draaien (hier, zonder cTrader)
 
-## Research summary (IC Markets data)
+```bash
+pip install -r requirements.txt
+python3 -m engine.run
+python3 -m engine.walkforward
+python3 -m engine.plot
+```
 
-- cTrader Raw Spread exposes **Level II Market Depth** (aggregated LP liquidity), not true exchange Level III.
-- DOM is usable **live/demo** via `MarketData.GetMarketDepth`; **not** reliably in historical backtests.
-- Backtest OHLC strategies first; add DOM confirmation on demo forward-test.
+## Strategieën
 
-## Goal vs risk
+1. **Breakout** — range-break + ATR-buffer  
+2. **MeanReversion** — VWAP-stretch fade (primaire default)  
+3. **Hybrid** — EMA-cross / pullback (OOS gezakt)  
+4. **Confluence** — 2+ strategieën eens  
 
-€1000/day on €10,000 (= 10%/day) **conflicts** with a **2% daily loss stop**. The bot enforces your risk rules; treat €1000/day as a later equity-scaled ambition after positive expectancy is proven.
+Risk: 1% per trade, −2% daghalt, +€1.000 lock, press-winners alleen als de dag groen is, 500× margin-cap.
 
-## Quick start
+## €1.000/dag
 
-1. Paste `XauUsdQuantBot.cs` into cTrader Algo → Build.  
-2. Backtest each strategy on XAUUSD M1 (see scorecard).  
-3. Attach best mode on **demo** with `UseDomFilter = true`.  
-
-Defaults assume demo equity ≈ €10,000, risk 1%, max daily loss 2%.
+Niet “elke kalenderdag”. Wel: 1 lot × $10 goud ≈ €1.000, plus size-press ná de eerste win. In de 61-daagse M5-sample raakte de winnaar **15 dagen** de lock (~25%), net **+€11k**, OOS bevestigd.
