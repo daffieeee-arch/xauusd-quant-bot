@@ -23,6 +23,7 @@ namespace cAlgo.Robots
     {
         AllSessions,
         LondonNY,
+        LondonNYSkipOpen,
         LondonOnly,
         NewYorkOnly
     }
@@ -531,9 +532,10 @@ namespace cAlgo.Robots
                     return hour >= 7 && hour < 16;
                 case SessionFilterMode.NewYorkOnly:
                     return hour >= 12 && hour < 21;
+                case SessionFilterMode.LondonNYSkipOpen:
+                    return hour >= 8 && hour < 21;
                 case SessionFilterMode.LondonNY:
                 default:
-                    // London 07-16 UTC, NY 12-21 UTC → trade 07-21, prefer overlap naturally via volatility
                     return hour >= 7 && hour < 21;
             }
         }
